@@ -4,7 +4,7 @@
 **Candidate:** Md Abdul Kalam | `abdulkalam0018@mnnit.ac.in`
 **City:** Pune | **Assigned Locality:** Hinjewadi
 
-**Live demo:** https://ivy-homes-assignment.vercel.app
+**Live demo:** [https://ivy-homes-assignment.vercel.app](https://ivy-homes-assignment3.vercel.app/login)
 **Repo:** https://github.com/Abdulkalam0018/Ivy-Homes-assignment
 
 ---
