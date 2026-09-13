@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "ivy-homes-frontend/dist",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "rootDirectory": "ivy-homes-frontend"
+}

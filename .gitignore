@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+ivy-homes-frontend/node_modules/
+
+# Build output
+ivy-homes-frontend/dist/
+
+# Environment variables
+ivy-homes-frontend/.env
+ivy-homes-frontend/.env.local
+
+# Raw harvested data (large files, not needed in repo)
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
