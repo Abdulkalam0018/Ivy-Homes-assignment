@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "ivy-homes-frontend/dist",
+  "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite"
 }
