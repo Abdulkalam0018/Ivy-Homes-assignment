@@ -13,11 +13,11 @@ export default function SavedPage() {
   })
 
   const removeMutation = useMutation({
-    mutationFn: (listingId) => favouritesApi.remove(listingId),
+    mutationFn: (listing) => favouritesApi.remove(listing.listing_id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favourites'] }),
   })
 
-  const savedIds = new Set((data?.results || []).map((l) => l.listing_id))
+  const savedIds = new Set((data?.results || []).map((listing) => String(listing.listing_id)))
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -48,8 +48,9 @@ export default function SavedPage() {
                 <ListingCard
                   key={listing.listing_id}
                   listing={listing}
-                  isSaved={savedIds.has(listing.listing_id)}
-                  onToggleSave={(id) => removeMutation.mutate(id)}
+                  isSaved={savedIds.has(String(listing.listing_id))}
+                  isSaving={removeMutation.isPending}
+                  onToggleSave={(savedListing) => removeMutation.mutate(savedListing)}
                 />
               ))}
             </div>

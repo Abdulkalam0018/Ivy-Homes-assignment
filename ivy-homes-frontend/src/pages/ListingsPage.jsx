@@ -53,17 +53,16 @@ export default function ListingsPage() {
     queryFn: () => favouritesApi.getAll(),
     retry: false,
   })
-  const savedIds = new Set(
-    (savedData?.results || []).map((l) => l.listing_id)
-  )
+  const savedIds = new Set((savedData?.results || []).map((listing) => String(listing.listing_id)))
 
   // Toggle save mutation
   const toggleSave = useMutation({
-    mutationFn: async (listingId) => {
-      if (savedIds.has(listingId)) {
+    mutationFn: async (listing) => {
+      const listingId = listing.listing_id
+      if (savedIds.has(String(listingId))) {
         await favouritesApi.remove(listingId)
       } else {
-        await favouritesApi.add(listingId)
+        await favouritesApi.add(listing)
       }
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favourites'] }),
@@ -220,8 +219,9 @@ export default function ListingsPage() {
                 <ListingCard
                   key={listing.listing_id}
                   listing={listing}
-                  isSaved={savedIds.has(listing.listing_id)}
-                  onToggleSave={(id) => toggleSave.mutate(id)}
+                  isSaved={savedIds.has(String(listing.listing_id))}
+                  isSaving={toggleSave.isPending}
+                  onToggleSave={(savedListing) => toggleSave.mutate(savedListing)}
                 />
               ))}
             </div>

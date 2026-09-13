@@ -38,13 +38,13 @@ export default function ListingDetailPage() {
     retry: false,
   })
 
-  const savedIds = new Set((savedData?.results || []).map((l) => l.listing_id))
-  const isSaved = savedIds.has(id)
+  const savedIds = new Set((savedData?.results || []).map((savedListing) => String(savedListing.listing_id)))
+  const isSaved = savedIds.has(String(id))
 
   const toggleSave = useMutation({
     mutationFn: async () => {
       if (isSaved) await favouritesApi.remove(id)
-      else await favouritesApi.add(id)
+      else await favouritesApi.add(listing)
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favourites'] }),
   })
@@ -82,12 +82,15 @@ export default function ListingDetailPage() {
                 {listing.apartment_name || 'Unnamed Property'}
               </h1>
               <button
+                type="button"
+                disabled={toggleSave.isPending}
                 onClick={() => toggleSave.mutate()}
-                className={`shrink-0 p-2 rounded-full border transition-colors ${
+                className={`shrink-0 p-2 rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                   isSaved
                     ? 'border-red-200 text-red-500 bg-red-50'
                     : 'border-slate-200 text-slate-400 hover:border-red-200 hover:text-red-400'
                 }`}
+                aria-label={isSaved ? 'Remove from saved listings' : 'Save listing'}
               >
                 <Heart className={`w-5 h-5 ${isSaved ? 'fill-current' : ''}`} />
               </button>

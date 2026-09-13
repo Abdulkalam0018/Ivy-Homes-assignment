@@ -140,12 +140,50 @@ export const projectsApi = {
   getOne: (id) => api.get(`/v1/projects/${id}`).then((r) => r.data),
 }
 
-// ── Favourites API ────────────────────────────────────────────────────────────
-// The API uses American spelling (`favorites`), unlike the documentation.
+// ── Saved listings ────────────────────────────────────────────────────────────
+// The documented favourites endpoint and its American-spelling variant both return
+// 404. Persist saved listings locally, scoped to the signed-in demo account.
+const SAVED_LISTINGS_PREFIX = 'ivy_saved_listings_'
+
+function savedListingsKey() {
+  const user = tokenStorage.getUser()
+  const userId = user?.id ?? user?.user_id ?? user?.email ?? 'guest'
+  return `${SAVED_LISTINGS_PREFIX}${encodeURIComponent(String(userId))}`
+}
+
+function readSavedListings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(savedListingsKey()) || '[]')
+    return Array.isArray(saved)
+      ? saved.filter((listing) => listing && typeof listing === 'object' && listing.listing_id != null)
+      : []
+  } catch {
+    return []
+  }
+}
+
+function writeSavedListings(listings) {
+  localStorage.setItem(savedListingsKey(), JSON.stringify(listings))
+}
+
 export const favouritesApi = {
-  getAll: () => api.get('/v1/favorites').then((r) => r.data),
-  add: (listingId) => api.post('/v1/favorites', { listing_id: listingId }).then((r) => r.data),
-  remove: (listingId) => api.delete(`/v1/favorites/${listingId}`).then((r) => r.data),
+  getAll: async () => {
+    const results = readSavedListings()
+    return { results, count: results.length }
+  },
+  add: async (listing) => {
+    if (!listing?.listing_id) throw new Error('A listing is required to save it.')
+
+    const saved = readSavedListings()
+    if (!saved.some((item) => String(item.listing_id) === String(listing.listing_id))) {
+      writeSavedListings([listing, ...saved])
+    }
+    return listing
+  },
+  remove: async (listingId) => {
+    const saved = readSavedListings()
+    writeSavedListings(saved.filter((listing) => String(listing.listing_id) !== String(listingId)))
+  },
 }
 
 // ── Analytics API ─────────────────────────────────────────────────────────────

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Heart, MapPin, BedDouble, Bath, Maximize2, CheckCircle } from 'lucide-react'
 import { formatPrice, formatArea } from '../lib/api'
 
-export default function ListingCard({ listing, isSaved, onToggleSave }) {
+export default function ListingCard({ listing, isSaved, isSaving = false, onToggleSave }) {
   const {
     listing_id,
     apartment_name,
@@ -34,12 +34,15 @@ export default function ListingCard({ listing, isSaved, onToggleSave }) {
           </Link>
           {onToggleSave && (
             <button
-              onClick={(e) => { e.preventDefault(); onToggleSave(listing_id) }}
-              className={`shrink-0 p-1.5 rounded-full transition-colors ${
+              type="button"
+              disabled={isSaving}
+              onClick={(e) => { e.preventDefault(); onToggleSave(listing) }}
+              className={`shrink-0 p-1.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 isSaved
                   ? 'text-red-500 hover:text-red-700'
                   : 'text-slate-400 hover:text-red-400'
               }`}
+              aria-label={isSaved ? 'Remove from saved listings' : 'Save listing'}
               title={isSaved ? 'Remove from saved' : 'Save listing'}
             >
               <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
