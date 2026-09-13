@@ -141,12 +141,11 @@ export const projectsApi = {
 }
 
 // ── Favourites API ────────────────────────────────────────────────────────────
-// NOTE: /v1/favourites returns 404 — using /v1/favorites (American spelling)
-// This is a confirmed API discrepancy vs documentation
+// The API uses American spelling (`favorites`), unlike the documentation.
 export const favouritesApi = {
-  getAll: () => api.get('/v1/favourites').then((r) => r.data),
-  add: (listingId) => api.post('/v1/favourites', { listing_id: listingId }).then((r) => r.data),
-  remove: (listingId) => api.delete(`/v1/favourites/${listingId}`).then((r) => r.data),
+  getAll: () => api.get('/v1/favorites').then((r) => r.data),
+  add: (listingId) => api.post('/v1/favorites', { listing_id: listingId }).then((r) => r.data),
+  remove: (listingId) => api.delete(`/v1/favorites/${listingId}`).then((r) => r.data),
 }
 
 // ── Analytics API ─────────────────────────────────────────────────────────────
