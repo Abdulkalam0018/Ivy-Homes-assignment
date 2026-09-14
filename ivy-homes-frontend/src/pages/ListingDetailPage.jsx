@@ -97,10 +97,24 @@ export default function ListingDetailPage() {
               </button>
             </div>
 
-            <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-4">
-              <MapPin className="w-4 h-4 shrink-0" />
-              <span className="capitalize">{listing.locality}, Pune</span>
-            </div>
+            {listing.latitude && listing.longitude ? (
+              <a
+                href={`https://www.google.com/maps/search/?api=1&query=${listing.latitude},${listing.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm font-medium transition-colors mb-4 w-fit"
+                title="View on Google Maps"
+              >
+                <MapPin className="w-4 h-4 shrink-0 text-slate-500" />
+                <span className="capitalize">{listing.locality}, Pune</span>
+                <ExternalLink className="w-3.5 h-3.5 ml-0.5 text-slate-400" />
+              </a>
+            ) : (
+              <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-4">
+                <MapPin className="w-4 h-4 shrink-0" />
+                <span className="capitalize">{listing.locality}, Pune</span>
+              </div>
+            )}
 
             {/* Key stats */}
             <div className="grid grid-cols-3 gap-3 mb-4">

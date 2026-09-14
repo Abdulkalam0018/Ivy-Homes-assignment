@@ -2,7 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeft, MapPin, BedDouble, Bath, Maximize2,
-  Phone, Home, DollarSign, Shield, Wrench, User, Tag,
+  Phone, Home, DollarSign, Shield, Wrench, User, Tag, ExternalLink,
 } from 'lucide-react'
 import { rentalsApi, formatPrice, formatArea } from '../lib/api'
 import { LoadingScreen, ErrorMessage, Badge } from '../components/ui'
@@ -68,10 +68,24 @@ export default function RentalDetailPage() {
           {r.title && r.apartment_name && (
             <p className="text-sm text-slate-500 mb-3">{r.title}</p>
           )}
-          <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-4">
-            <MapPin className="w-4 h-4" />
-            <span className="capitalize">{r.locality}</span>
-          </div>
+          {r.latitude && r.longitude ? (
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${r.latitude},${r.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm font-medium transition-colors mb-4 w-fit"
+              title="View on Google Maps"
+            >
+              <MapPin className="w-4 h-4 shrink-0 text-slate-500" />
+              <span className="capitalize">{r.locality}, Pune</span>
+              <ExternalLink className="w-3.5 h-3.5 ml-0.5 text-slate-400" />
+            </a>
+          ) : (
+            <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-4">
+              <MapPin className="w-4 h-4 shrink-0" />
+              <span className="capitalize">{r.locality}, Pune</span>
+            </div>
+          )}
 
           {/* Key stats bar */}
           <div className="flex flex-wrap gap-5 text-sm text-slate-700">
