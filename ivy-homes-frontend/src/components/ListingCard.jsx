@@ -21,7 +21,7 @@ export default function ListingCard({ listing, isSaved, isSaving = false, onTogg
 
   return (
     <div
-      className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group cursor-pointer"
+      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group cursor-pointer"
       onClick={() => navigate(`/listings/${listing_id}`)}
     >
       {/* Card header — color band based on property type */}

@@ -24,7 +24,7 @@ const queryClient = new QueryClient({
 
 function AppLayout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <Navbar />
       <main>{children}</main>
     </div>
