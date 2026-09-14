@@ -14,18 +14,21 @@ const STATUS_VARIANTS = {
   'ready to move': 'green',
 }
 
+// price_min is returned in Lakhs (e.g. 80.0 → ₹80 L)
+// price_max is returned in Crores (e.g. 3.22 → ₹3.22 Cr)
+function formatMinPrice(val) {
+  if (!val && val !== 0) return '—'
+  if (val >= 100) return `₹${(val / 100).toFixed(2)} Cr`   // e.g. 134 L → ₹1.34 Cr
+  return `₹${val} L`
+}
+
+function formatMaxPrice(val) {
+  if (!val && val !== 0) return '—'
+  return `₹${val} Cr`
+}
+
 function ProjectCard({ project }) {
   const navigate = useNavigate()
-  // IMPORTANT: price_min and price_max from the API appear to be in crores (Cr),
-  // not rupees as the documentation claims. e.g., price_min=80.0 → ₹80 Cr
-  // We display both the raw value and the formatted interpretation.
-  const formatProjectPrice = (val) => {
-    if (!val) return '—'
-    // Values like 3.22, 80.0 are clearly in crores
-    if (val < 1000) return `₹${val} Cr`
-    // Fallback: treat as rupees
-    return formatPrice(val)
-  }
 
   return (
     <div
@@ -93,7 +96,7 @@ function ProjectCard({ project }) {
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Price range</p>
             <p className="text-sm font-bold text-slate-900">
-              {formatProjectPrice(project.price_min)} – {formatProjectPrice(project.price_max)}
+              {formatMinPrice(project.price_min)} – {formatMaxPrice(project.price_max)}
             </p>
           </div>
           <div className="text-right">
@@ -141,10 +144,6 @@ export default function ProjectsPage() {
         description={data ? `${data.total.toLocaleString()} projects in Pune` : 'New & under-construction projects'}
       />
 
-      {/* Note about price units — surfacing a data discrepancy to users */}
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-5 text-xs text-amber-800">
-        <strong>Note:</strong> Project prices are displayed in crores (Cr). The API returns values like "80.0" and "3.22" — these represent crore values, not rupees, contrary to the API documentation.
-      </div>
 
       {/* Filters */}
       <div className="bg-white border border-slate-200 rounded-xl p-4 mb-6 flex flex-wrap gap-3 items-end">

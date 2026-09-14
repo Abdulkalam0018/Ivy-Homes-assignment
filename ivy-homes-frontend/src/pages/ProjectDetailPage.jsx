@@ -13,10 +13,16 @@ const STATUS_VARIANTS = {
   'ready to move': 'green',
 }
 
-const formatProjectPrice = (val) => {
+// price_min is in Lakhs (e.g. 80.0 → ₹80 L), price_max is in Crores (e.g. 3.22 → ₹3.22 Cr)
+const formatMinPrice = (val) => {
   if (!val && val !== 0) return '—'
-  if (val < 1000) return `₹${val} Cr`
-  return formatPrice(val)
+  if (val >= 100) return `₹${(val / 100).toFixed(2)} Cr`
+  return `₹${val} L`
+}
+
+const formatMaxPrice = (val) => {
+  if (!val && val !== 0) return '—'
+  return `₹${val} Cr`
 }
 
 function DetailRow({ icon: Icon, label, value }) {
@@ -128,11 +134,11 @@ export default function ProjectDetailPage() {
           <div className="space-y-3">
             <div>
               <p className="text-xs text-slate-400 mb-0.5">Minimum Price</p>
-              <p className="text-xl font-bold text-slate-900">{formatProjectPrice(p.price_min)}</p>
+              <p className="text-xl font-bold text-slate-900">{formatMinPrice(p.price_min)}</p>
             </div>
             <div>
               <p className="text-xs text-slate-400 mb-0.5">Maximum Price</p>
-              <p className="text-xl font-bold text-violet-700">{formatProjectPrice(p.price_max)}</p>
+              <p className="text-xl font-bold text-violet-700">{formatMaxPrice(p.price_max)}</p>
             </div>
             {p.min_area_sqft && p.max_area_sqft && (
               <div className="pt-3 border-t border-slate-100">
