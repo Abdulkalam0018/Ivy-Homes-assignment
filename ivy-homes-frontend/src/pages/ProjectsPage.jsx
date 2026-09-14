@@ -14,16 +14,20 @@ const STATUS_VARIANTS = {
   'ready to move': 'green',
 }
 
-// price_min is returned in Lakhs (e.g. 80.0 → ₹80 L)
-// price_max is returned in Crores (e.g. 3.22 → ₹3.22 Cr)
-function formatMinPrice(val) {
-  if (val == null) return '—'
-  return formatPrice(Math.round(val * 100000))
+// User's rule:
+// If right < left -> left is in Lacs, right is in Crores
+// If left < right -> both are in Crores
+function formatMinPrice(min, max) {
+  if (min == null) return '—'
+  if (max != null && min < max) {
+    return formatPrice(Math.round(min * 10000000)) // Crores
+  }
+  return formatPrice(Math.round(min * 100000)) // Lacs
 }
 
-function formatMaxPrice(val) {
-  if (val == null) return '—'
-  return formatPrice(Math.round(val * 10000000))
+function formatMaxPrice(min, max) {
+  if (max == null) return '—'
+  return formatPrice(Math.round(max * 10000000)) // Always Crores
 }
 
 function ProjectCard({ project }) {
@@ -95,7 +99,7 @@ function ProjectCard({ project }) {
           <div>
             <p className="text-xs text-slate-400 mb-0.5">Price range</p>
             <p className="text-sm font-bold text-slate-900">
-              {formatMinPrice(project.price_min)} – {formatMaxPrice(project.price_max)}
+              {formatMinPrice(project.price_min, project.price_max)} – {formatMaxPrice(project.price_min, project.price_max)}
             </p>
           </div>
           <div className="text-right">

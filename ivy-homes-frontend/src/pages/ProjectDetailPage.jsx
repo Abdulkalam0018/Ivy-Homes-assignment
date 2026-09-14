@@ -13,15 +13,20 @@ const STATUS_VARIANTS = {
   'ready to move': 'green',
 }
 
-// price_min is in Lakhs (e.g. 80.0 → ₹80 L), price_max is in Crores (e.g. 3.22 → ₹3.22 Cr)
-const formatMinPrice = (val) => {
-  if (val == null) return '—'
-  return formatPrice(Math.round(val * 100000))
+// User's rule:
+// If right < left -> left is in Lacs, right is in Crores
+// If left < right -> both are in Crores
+const formatMinPrice = (min, max) => {
+  if (min == null) return '—'
+  if (max != null && min < max) {
+    return formatPrice(Math.round(min * 10000000)) // Crores
+  }
+  return formatPrice(Math.round(min * 100000)) // Lacs
 }
 
-const formatMaxPrice = (val) => {
-  if (val == null) return '—'
-  return formatPrice(Math.round(val * 10000000))
+const formatMaxPrice = (min, max) => {
+  if (max == null) return '—'
+  return formatPrice(Math.round(max * 10000000)) // Always Crores
 }
 
 function DetailRow({ icon: Icon, label, value }) {
@@ -133,11 +138,11 @@ export default function ProjectDetailPage() {
           <div className="space-y-3">
             <div>
               <p className="text-xs text-slate-400 mb-0.5">Minimum Price</p>
-              <p className="text-xl font-bold text-slate-900">{formatMinPrice(p.price_min)}</p>
+              <p className="text-xl font-bold text-slate-900">{formatMinPrice(p.price_min, p.price_max)}</p>
             </div>
             <div>
               <p className="text-xs text-slate-400 mb-0.5">Maximum Price</p>
-              <p className="text-xl font-bold text-violet-700">{formatMaxPrice(p.price_max)}</p>
+              <p className="text-xl font-bold text-violet-700">{formatMaxPrice(p.price_min, p.price_max)}</p>
             </div>
             {p.min_area_sqft && p.max_area_sqft && (
               <div className="pt-3 border-t border-slate-100">
