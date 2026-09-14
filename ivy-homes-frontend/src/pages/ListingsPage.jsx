@@ -1,16 +1,16 @@
 import { useState, useCallback } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { Search, SlidersHorizontal, X, Scale } from 'lucide-react'
 import { listingsApi, favouritesApi } from '../lib/api'
 import ListingCard from '../components/ListingCard'
 import { LoadingScreen, ErrorMessage, EmptyState, Pagination, PageHeader } from '../components/ui'
 import { Home } from 'lucide-react'
+import CompareModal from '../components/CompareModal'
 
 const LIMIT = 20
 
 const LOCALITIES = [
-  'wakad', 'hinjewadi', 'baner', 'kothrud', 'viman nagar', 'kharadi',
-  'punawale', 'pimple saudagar', 'aundh', 'hadapsar', 'magarpatta',
+  'hinjewadi', 'wakad', 'baner', 'kothrud', 'kharadi', 'viman nagar', 'magarpatta', 'hadapsar', 'aundh'
 ]
 
 const FURNISHING = ['unfurnished', 'semi-furnished', 'fully-furnished']
@@ -29,6 +29,8 @@ export default function ListingsPage() {
   const [filters, setFilters] = useState(initialFilters)
   const [applied, setApplied] = useState(initialFilters)
   const [showFilters, setShowFilters] = useState(false)
+  const [selectedForCompare, setSelectedForCompare] = useState([])
+  const [showCompareModal, setShowCompareModal] = useState(false)
 
   // Build query params — only include non-empty values
   const queryParams = useCallback(() => {
@@ -80,10 +82,24 @@ export default function ListingsPage() {
     setOffset(0)
   }
 
+  function toggleCompare(listing) {
+    setSelectedForCompare(prev => {
+      const isSelected = prev.some(item => item.listing_id === listing.listing_id)
+      if (isSelected) {
+        return prev.filter(item => item.listing_id !== listing.listing_id)
+      }
+      if (prev.length >= 3) {
+        alert("You can only compare up to 3 properties at a time.")
+        return prev
+      }
+      return [...prev, listing]
+    })
+  }
+
   const hasActiveFilters = Object.values(applied).some(Boolean)
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-32">
       <PageHeader
         title="Property Listings"
         description={data ? `${data.total.toLocaleString()} properties in Pune` : 'Browse properties for sale'}
@@ -222,6 +238,8 @@ export default function ListingsPage() {
                   isSaved={savedIds.has(String(listing.listing_id))}
                   isSaving={toggleSave.isPending}
                   onToggleSave={(savedListing) => toggleSave.mutate(savedListing)}
+                  isCompared={selectedForCompare.some(item => item.listing_id === listing.listing_id)}
+                  onToggleCompare={toggleCompare}
                 />
               ))}
             </div>
@@ -240,6 +258,37 @@ export default function ListingsPage() {
             />
           )}
         </>
+      )}
+
+      {/* Floating Compare Bar */}
+      {selectedForCompare.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-5 py-3 rounded-2xl shadow-xl flex items-center gap-4 z-50">
+          <span className="text-sm font-medium whitespace-nowrap">
+            {selectedForCompare.length} properties selected
+          </span>
+          <button
+            onClick={() => setShowCompareModal(true)}
+            disabled={selectedForCompare.length < 2}
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-100 text-blue-800 hover:bg-white rounded-lg text-sm font-bold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Scale className="w-4 h-4" />
+            Compare Now
+          </button>
+          <button
+            onClick={() => setSelectedForCompare([])}
+            className="p-1 hover:bg-slate-700 rounded-full transition-colors text-slate-300 hover:text-white shrink-0 ml-1"
+            title="Clear selection"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      {showCompareModal && (
+        <CompareModal
+          listings={selectedForCompare}
+          onClose={() => setShowCompareModal(false)}
+        />
       )}
     </div>
   )

@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { Heart, MapPin, BedDouble, Bath, Maximize2, CheckCircle } from 'lucide-react'
+import { Heart, MapPin, BedDouble, Bath, Maximize2, CheckCircle, Scale } from 'lucide-react'
 import { formatPrice, formatArea } from '../lib/api'
 
-export default function ListingCard({ listing, isSaved, isSaving = false, onToggleSave }) {
+export default function ListingCard({ listing, isSaved, isSaving = false, onToggleSave, isCompared, onToggleCompare }) {
   const navigate = useNavigate()
   const {
     listing_id,
@@ -21,34 +21,51 @@ export default function ListingCard({ listing, isSaved, isSaving = false, onTogg
 
   return (
     <div
-      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:bg-slate-200 hover:shadow-md transition-all group cursor-pointer"
+      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:bg-slate-200 hover:shadow-md transition-all group cursor-pointer flex flex-col"
       onClick={() => navigate(`/listings/${listing_id}`)}
     >
       {/* Card header — color band based on property type */}
-      <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-500" />
+      <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-500 shrink-0" />
 
-      <div className="p-4">
+      <div className="p-4 flex flex-col h-full">
         {/* Top row: name + save button */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <span className="font-semibold text-slate-800 text-sm leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+          <span className="font-semibold text-slate-800 text-sm leading-snug group-hover:text-blue-600 transition-colors line-clamp-2 pr-2">
             {apartment_name || 'Unnamed Property'}
           </span>
-          {onToggleSave && (
-            <button
-              type="button"
-              disabled={isSaving}
-              onClick={(e) => { e.stopPropagation(); onToggleSave(listing) }}
-              className={`shrink-0 p-1.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
-                isSaved
-                  ? 'text-red-500 hover:text-red-700'
-                  : 'text-slate-400 hover:text-red-400'
-              }`}
-              aria-label={isSaved ? 'Remove from saved listings' : 'Save listing'}
-              title={isSaved ? 'Remove from saved' : 'Save listing'}
-            >
-              <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
-            </button>
-          )}
+          <div className="flex items-center gap-1 shrink-0">
+            {onToggleCompare && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onToggleCompare(listing) }}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors border ${
+                  isCompared
+                    ? 'bg-blue-600 text-white border-blue-600 hover:bg-blue-700'
+                    : 'bg-transparent text-slate-500 border-slate-300 hover:bg-slate-200 hover:text-slate-700'
+                }`}
+                title={isCompared ? 'Remove from comparison' : 'Compare property'}
+              >
+                <Scale className="w-3.5 h-3.5" />
+                {isCompared ? 'Selected' : 'Compare'}
+              </button>
+            )}
+            {onToggleSave && (
+              <button
+                type="button"
+                disabled={isSaving}
+                onClick={(e) => { e.stopPropagation(); onToggleSave(listing) }}
+                className={`shrink-0 p-1.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                  isSaved
+                    ? 'text-red-500 hover:text-red-700 hover:bg-red-50'
+                    : 'text-slate-400 hover:text-red-400 hover:bg-slate-200'
+                }`}
+                aria-label={isSaved ? 'Remove from saved listings' : 'Save listing'}
+                title={isSaved ? 'Remove from saved' : 'Save listing'}
+              >
+                <Heart className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Locality */}
