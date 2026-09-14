@@ -107,12 +107,12 @@ export default function ProjectDetailPage() {
               href={`https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 rounded-lg text-sm font-medium transition-colors mb-5 w-fit"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-violet-50 text-violet-700 hover:bg-violet-100 hover:text-violet-900 rounded-lg text-sm font-medium transition-colors mb-5 w-fit"
               title="View on Google Maps"
             >
-              <MapPin className="w-4 h-4 shrink-0 text-slate-500" />
+              <MapPin className="w-4 h-4 shrink-0 text-violet-500" />
               <span className="capitalize">{p.locality}, Pune</span>
-              <ExternalLink className="w-3.5 h-3.5 ml-0.5 text-slate-400" />
+              <ExternalLink className="w-3.5 h-3.5 ml-0.5 text-violet-400" />
             </a>
           ) : (
             <div className="flex items-center gap-1.5 text-slate-500 text-sm mb-5">
