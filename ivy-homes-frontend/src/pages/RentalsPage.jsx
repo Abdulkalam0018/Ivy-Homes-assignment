@@ -13,7 +13,7 @@ function RentalCard({ rental }) {
   const navigate = useNavigate()
   return (
     <div
-      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:bg-slate-200 hover:shadow-md transition-all cursor-pointer group"
       onClick={() => navigate(`/rentals/${rental.listing_id}`)}
     >
       <div className="h-2 bg-gradient-to-r from-emerald-500 to-teal-500" />

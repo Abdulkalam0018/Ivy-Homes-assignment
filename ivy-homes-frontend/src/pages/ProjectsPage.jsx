@@ -35,7 +35,7 @@ function ProjectCard({ project }) {
 
   return (
     <div
-      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+      className="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden hover:bg-slate-200 hover:shadow-md transition-all cursor-pointer group"
       onClick={() => navigate(`/projects/${project.project_id}`)}
     >
       <div className="h-2 bg-gradient-to-r from-violet-500 to-purple-600" />
