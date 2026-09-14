@@ -17,14 +17,13 @@ const STATUS_VARIANTS = {
 // price_min is returned in Lakhs (e.g. 80.0 → ₹80 L)
 // price_max is returned in Crores (e.g. 3.22 → ₹3.22 Cr)
 function formatMinPrice(val) {
-  if (!val && val !== 0) return '—'
-  if (val >= 100) return `₹${(val / 100).toFixed(2)} Cr`   // e.g. 134 L → ₹1.34 Cr
-  return `₹${val} L`
+  if (val == null) return '—'
+  return formatPrice(Math.round(val * 100000))
 }
 
 function formatMaxPrice(val) {
-  if (!val && val !== 0) return '—'
-  return `₹${val} Cr`
+  if (val == null) return '—'
+  return formatPrice(Math.round(val * 10000000))
 }
 
 function ProjectCard({ project }) {

@@ -195,9 +195,10 @@ export const analyticsApi = {
 
 // ── Format helpers ────────────────────────────────────────────────────────────
 export function formatPrice(price) {
-  if (!price) return '—'
-  if (price >= 10000000) return `₹${(price / 10000000).toFixed(2)} Cr`
-  if (price >= 100000) return `₹${(price / 100000).toFixed(2)} L`
+  if (price == null) return '—'
+  if (price === 0) return '₹0'
+  if (price >= 10000000) return `₹${parseFloat((price / 10000000).toFixed(2))} Cr`
+  if (price >= 100000) return `₹${parseFloat((price / 100000).toFixed(2))} L`
   return `₹${price.toLocaleString('en-IN')}`
 }
 
