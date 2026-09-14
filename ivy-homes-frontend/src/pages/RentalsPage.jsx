@@ -78,19 +78,7 @@ function RentalCard({ rental }) {
                   Contact
                 </a>
               )}
-              {rental.listing_url && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    window.open(rental.listing_url, '_blank', 'noopener,noreferrer')
-                  }}
-                  className="flex items-center gap-1 text-slate-400 text-xs hover:text-slate-600 mt-1 cursor-pointer"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  View
-                </button>
-              )}
+
             </div>
           </div>
         </div>

@@ -188,22 +188,7 @@ export default function ListingDetailPage() {
               </div>
             )}
 
-            {/* View original listing — always visible, uses window.open to bypass popup blockers */}
-            {listing.listing_url ? (
-              <button
-                type="button"
-                onClick={() => window.open(listing.listing_url, '_blank', 'noopener,noreferrer')}
-                className="flex items-center justify-center gap-2 w-full py-2.5 border border-blue-600 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer"
-              >
-                <ExternalLink className="w-4 h-4" />
-                View original listing
-              </button>
-            ) : (
-              <div className="flex items-center justify-center gap-2 w-full py-2.5 border border-slate-200 text-slate-400 rounded-lg text-sm select-none">
-                <ExternalLink className="w-4 h-4" />
-                No original listing URL
-              </div>
-            )}
+
           </div>
         </div>
       </div>
