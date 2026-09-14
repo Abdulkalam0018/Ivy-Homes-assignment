@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
 import { MapPin, BedDouble, Bath, Maximize2, Phone, ExternalLink } from 'lucide-react'
 import { rentalsApi, formatPrice, formatArea } from '../lib/api'
 import { LoadingScreen, ErrorMessage, EmptyState, Pagination, PageHeader, Badge } from '../components/ui'
@@ -9,11 +10,15 @@ const LIMIT = 20
 const FURNISHING = ['unfurnished', 'semi-furnished', 'fully-furnished']
 
 function RentalCard({ rental }) {
+  const navigate = useNavigate()
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div
+      className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+      onClick={() => navigate(`/rentals/${rental.listing_id}`)}
+    >
       <div className="h-2 bg-gradient-to-r from-emerald-500 to-teal-500" />
       <div className="p-4">
-        <h3 className="font-semibold text-slate-800 text-sm mb-1 line-clamp-1">
+        <h3 className="font-semibold text-slate-800 text-sm mb-1 line-clamp-1 group-hover:text-emerald-600 transition-colors">
           {rental.apartment_name || rental.title || 'Rental Property'}
         </h3>
         {rental.title && rental.apartment_name && (
@@ -66,6 +71,7 @@ function RentalCard({ rental }) {
               {rental.posted_by_contact && (
                 <a
                   href={`tel:${rental.posted_by_contact}`}
+                  onClick={(e) => e.stopPropagation()}
                   className="flex items-center gap-1 text-blue-600 text-xs hover:text-blue-700"
                 >
                   <Phone className="w-3 h-3" />
@@ -73,15 +79,17 @@ function RentalCard({ rental }) {
                 </a>
               )}
               {rental.listing_url && (
-                <a
-                  href={rental.listing_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-slate-400 text-xs hover:text-slate-600 mt-1"
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    window.open(rental.listing_url, '_blank', 'noopener,noreferrer')
+                  }}
+                  className="flex items-center gap-1 text-slate-400 text-xs hover:text-slate-600 mt-1 cursor-pointer"
                 >
                   <ExternalLink className="w-3 h-3" />
                   View
-                </a>
+                </button>
               )}
             </div>
           </div>
@@ -90,6 +98,7 @@ function RentalCard({ rental }) {
     </div>
   )
 }
+
 
 export default function RentalsPage() {
   const [offset, setOffset] = useState(0)

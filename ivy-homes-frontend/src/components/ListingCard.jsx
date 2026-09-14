@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Heart, MapPin, BedDouble, Bath, Maximize2, CheckCircle } from 'lucide-react'
 import { formatPrice, formatArea } from '../lib/api'
 
 export default function ListingCard({ listing, isSaved, isSaving = false, onToggleSave }) {
+  const navigate = useNavigate()
   const {
     listing_id,
     apartment_name,
@@ -19,24 +20,24 @@ export default function ListingCard({ listing, isSaved, isSaving = false, onTogg
   } = listing
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group">
+    <div
+      className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group cursor-pointer"
+      onClick={() => navigate(`/listings/${listing_id}`)}
+    >
       {/* Card header — color band based on property type */}
       <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-500" />
 
       <div className="p-4">
         {/* Top row: name + save button */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <Link
-            to={`/listings/${listing_id}`}
-            className="font-semibold text-slate-800 text-sm leading-snug hover:text-blue-600 transition-colors line-clamp-2"
-          >
+          <span className="font-semibold text-slate-800 text-sm leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
             {apartment_name || 'Unnamed Property'}
-          </Link>
+          </span>
           {onToggleSave && (
             <button
               type="button"
               disabled={isSaving}
-              onClick={(e) => { e.preventDefault(); onToggleSave(listing) }}
+              onClick={(e) => { e.stopPropagation(); onToggleSave(listing) }}
               className={`shrink-0 p-1.5 rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                 isSaved
                   ? 'text-red-500 hover:text-red-700'

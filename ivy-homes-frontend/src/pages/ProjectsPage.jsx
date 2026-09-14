@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { MapPin, Building2, Calendar, Layers, ExternalLink, TrendingUp } from 'lucide-react'
 import { projectsApi, formatPrice } from '../lib/api'
 import { LoadingScreen, ErrorMessage, EmptyState, Pagination, PageHeader, Badge } from '../components/ui'
@@ -15,6 +15,7 @@ const STATUS_VARIANTS = {
 }
 
 function ProjectCard({ project }) {
+  const navigate = useNavigate()
   // IMPORTANT: price_min and price_max from the API appear to be in crores (Cr),
   // not rupees as the documentation claims. e.g., price_min=80.0 → ₹80 Cr
   // We display both the raw value and the formatted interpretation.
@@ -27,17 +28,17 @@ function ProjectCard({ project }) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow">
+    <div
+      className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer group"
+      onClick={() => navigate(`/projects/${project.project_id}`)}
+    >
       <div className="h-2 bg-gradient-to-r from-violet-500 to-purple-600" />
       <div className="p-5">
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-2">
-          <Link
-            to={`/projects/${project.project_id}`}
-            className="font-semibold text-slate-900 text-sm leading-snug hover:text-violet-600 transition-colors line-clamp-2"
-          >
+          <span className="font-semibold text-slate-900 text-sm leading-snug group-hover:text-violet-600 transition-colors line-clamp-2">
             {project.apartment_name}
-          </Link>
+          </span>
           <Badge variant={STATUS_VARIANTS[project.project_status] || 'default'}>
             {project.project_status}
           </Badge>
@@ -98,9 +99,16 @@ function ProjectCard({ project }) {
           <div className="text-right">
             <p className="text-xs text-slate-400">{project.total_listings} listing{project.total_listings !== 1 ? 's' : ''}</p>
             {project.project_url && (
-              <a href={project.project_url} target="_blank" rel="noopener noreferrer" className="text-violet-500 hover:text-violet-700">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  window.open(project.project_url, '_blank', 'noopener,noreferrer')
+                }}
+                className="text-violet-500 hover:text-violet-700 cursor-pointer"
+              >
                 <ExternalLink className="w-3.5 h-3.5 inline" />
-              </a>
+              </button>
             )}
           </div>
         </div>

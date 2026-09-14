@@ -11,8 +11,8 @@ import { LoadingScreen, ErrorMessage, Badge } from '../components/ui'
 function DetailRow({ icon: Icon, label, value }) {
   if (!value && value !== 0) return null
   return (
-    <div className="flex items-start gap-3 py-3 border-b border-slate-100 last:border-0">
-      <div className="p-1.5 bg-slate-100 rounded-lg shrink-0">
+    <div className="flex items-start gap-3 py-3 border-b border-slate-200 last:border-0">
+      <div className="p-1.5 bg-slate-200 rounded-lg shrink-0">
         <Icon className="w-3.5 h-3.5 text-slate-600" />
       </div>
       <div>
@@ -38,7 +38,7 @@ export default function ListingDetailPage() {
     retry: false,
   })
 
-  const savedIds = new Set((savedData?.results || []).map((savedListing) => String(savedListing.listing_id)))
+  const savedIds = new Set((savedData?.results || []).map((l) => String(l.listing_id)))
   const isSaved = savedIds.has(String(id))
 
   const toggleSave = useMutation({
@@ -75,8 +75,9 @@ export default function ListingDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main content */}
         <div className="lg:col-span-2 space-y-5">
+
           {/* Header card */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
             <div className="flex items-start justify-between gap-4 mb-2">
               <h1 className="text-xl font-bold text-slate-900 leading-tight">
                 {listing.apartment_name || 'Unnamed Property'}
@@ -142,14 +143,14 @@ export default function ListingDetailPage() {
 
           {/* Description */}
           {listing.description && (
-            <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
               <h2 className="font-semibold text-slate-900 mb-3">About this property</h2>
               <p className="text-slate-600 text-sm leading-relaxed">{listing.description}</p>
             </div>
           )}
 
           {/* Property details */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-6">
             <h2 className="font-semibold text-slate-900 mb-2">Property details</h2>
             <DetailRow icon={Building2} label="Property type" value={listing.property_type} />
             <DetailRow icon={Layers} label="Floor" value={listing.floor != null ? `${listing.floor} of ${listing.total_floors}` : null} />
@@ -162,8 +163,7 @@ export default function ListingDetailPage() {
 
         {/* Sidebar */}
         <div className="space-y-4">
-          {/* Price card */}
-          <div className="bg-white rounded-xl border border-slate-200 p-5 sticky top-24">
+          <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 sticky top-24">
             <p className="text-2xl font-bold text-slate-900 mb-1">{formatPrice(listing.price)}</p>
             {pricePerSqft && (
               <p className="text-slate-500 text-sm mb-4">
@@ -173,7 +173,7 @@ export default function ListingDetailPage() {
 
             {/* Contact */}
             {listing.posted_by_name && (
-              <div className="mb-4 p-3 bg-slate-50 rounded-lg">
+              <div className="mb-4 p-3 bg-white rounded-lg border border-slate-200">
                 <p className="text-xs text-slate-500 mb-1 capitalize">{listing.posted_by}</p>
                 <p className="text-sm font-medium text-slate-900">{listing.posted_by_name}</p>
                 {listing.posted_by_contact && (
@@ -188,16 +188,21 @@ export default function ListingDetailPage() {
               </div>
             )}
 
-            {listing.listing_url && (
-              <a
-                href={listing.listing_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 border border-blue-600 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors"
+            {/* View original listing — always visible, uses window.open to bypass popup blockers */}
+            {listing.listing_url ? (
+              <button
+                type="button"
+                onClick={() => window.open(listing.listing_url, '_blank', 'noopener,noreferrer')}
+                className="flex items-center justify-center gap-2 w-full py-2.5 border border-blue-600 text-blue-600 rounded-lg text-sm font-medium hover:bg-blue-50 transition-colors cursor-pointer"
               >
                 <ExternalLink className="w-4 h-4" />
                 View original listing
-              </a>
+              </button>
+            ) : (
+              <div className="flex items-center justify-center gap-2 w-full py-2.5 border border-slate-200 text-slate-400 rounded-lg text-sm select-none">
+                <ExternalLink className="w-4 h-4" />
+                No original listing URL
+              </div>
             )}
           </div>
         </div>

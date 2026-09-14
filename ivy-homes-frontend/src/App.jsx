@@ -7,7 +7,9 @@ import LoginPage from './pages/LoginPage'
 import ListingsPage from './pages/ListingsPage'
 import ListingDetailPage from './pages/ListingDetailPage'
 import RentalsPage from './pages/RentalsPage'
+import RentalDetailPage from './pages/RentalDetailPage'
 import ProjectsPage from './pages/ProjectsPage'
+import ProjectDetailPage from './pages/ProjectDetailPage'
 import SavedPage from './pages/SavedPage'
 import InsightsPage from './pages/InsightsPage'
 
@@ -64,10 +66,26 @@ export default function App() {
               }
             />
             <Route
+              path="/rentals/:id"
+              element={
+                <ProtectedRoute>
+                  <AppLayout><RentalDetailPage /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/projects"
               element={
                 <ProtectedRoute>
                   <AppLayout><ProjectsPage /></AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects/:id"
+              element={
+                <ProtectedRoute>
+                  <AppLayout><ProjectDetailPage /></AppLayout>
                 </ProtectedRoute>
               }
             />
